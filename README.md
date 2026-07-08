@@ -34,6 +34,13 @@ Proyecto desarrollado por **ILikeCats (iliekcatsss)**. Si tienes dudas, sugerenc
 * **GitHub:** [@iliekcatsss](https://github.com/iliekcatsss)
 * **Issues:** [Reportar un problema aquí](https://github.com/iliekcatsss/mintdows/issues)
 
+## Créditos y Licencias
+
+Este proyecto organiza y automatiza herramientas de terceros respetando sus licencias originales:
+
+* **Tema Visual Windows 10:** Basado en el trabajo de Christian Medel (Elbullazul), Simon Steinbeiß, Joern Konopka, Georgi Karavasilev, David Barr y colaboradores. Distribuido originalmente bajo la licencia GNU GPL v3. Puedes encontrar los créditos completos y su licencia dentro de la carpeta `themes/`.
+* **Iconos We10X:** Propiedad de sus respectivos autores bajo sus propias licencias de distribución.
+
 <!-------------------------------------------------->
 [License]: LICENSE
 [Commit Rate]: https://github.com/iliekcatsss/mintdows/commits/main/
