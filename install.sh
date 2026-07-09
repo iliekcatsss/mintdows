@@ -1,10 +1,16 @@
 #!/bin/bash
 
-# detener si hay error (?)
-set -e
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "$REPO_DIR"
+
+# leer version local (si no existe asume v0.0.0)
+VERSION_LOCAL="0.0.0"
+if [ -f "VERSION" ]; then
+    VERSION_LOCAL=$(cat VERSION | tr -d '\r' | xargs)
+fi
 
 echo "==========================================="
-echo "            Mintdows v1.0.0                "
+echo "            Mintdows v1.0.1                "
 echo "             Por ILikeCats                 "
 echo "==========================================="
 
@@ -35,8 +41,8 @@ flatpak install flathub \
     org.onlyoffice.desktopeditors \
     com.github.jeromerobert.pdfarranger \
     org.videolan.VLC \
-    com.tomwatson.Emote \
-    com.github.hluk.CopyQ \
+    com.tomjwatson.Emote \
+    com.github.hluk.copyq \
     com.google.Chrome -y
 
 # aplicar o actualizar la personalizacion visual
@@ -50,8 +56,33 @@ if [ -f ./configs/cinnamon.dconf ]; then
     dconf load /org/cinnamon/ < ./configs/cinnamon.dconf  
 fi
 
+chmod +x ./install.sh
+if [ -f "./update.sh" ]; then
+    chmod +x ./update.sh
+fi
+
+
+DESKTOP_DIR=$(xdg-user-dir DESKTOP)
+
+echo "Creando lanzador en Escritorio ($DESKTOP_DIR)..."
+
+cat <<EOF > "$DESKTOP_DIR/Actualizar-Sistema.desktop"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=true
+Name=Actualizar Sistema
+Comment=Mantiene tus programas y la PC al día.
+Exec=bash $REPO_DIR/update.sh
+Icon=update
+Categories=System;Settings;
+EOF
+
+chmod +x "$DESKTOP_DIR/Actualizar-Sistema.desktop"
+
 echo "==========================================="
 echo "    ¡Mintdows se instaló correctamente     "
-echo "  Presiona Enter para cerrar esta ventana. "
+echo "   Presiona Enter para cerrar esta ventana."
 echo "==========================================="
-read
+read -p ""
+kill -9 $PPID
