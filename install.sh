@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE}" )" &> /dev/null && pwd )"
 cd "$REPO_DIR"
 
 # leer version local (si no existe asume v0.0.0)
@@ -10,7 +10,7 @@ if [ -f "VERSION" ]; then
 fi
 
 echo "==========================================="
-echo "            Mintdows v1.0.1                "
+echo "            Mintdows v$VERSION_LOCAL"
 echo "             Por ILikeCats                 "
 echo "==========================================="
 
@@ -28,7 +28,7 @@ sudo apt install -y git flatpak curl wget
 
 # configurar flathub
 echo "[3/5] Configurando repositorios de aplicaciones..."
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --if-not-exists flathub https://flathub.org
 
 # instalar utilidades del sistema
 echo "[4/5] Instalando aplicaciones desde FlatHub..."
@@ -53,14 +53,23 @@ cp -ru ./themes/* ~/.themes/
 cp -ru ./icons/* ~/.icons/
 
 if [ -f ./configs/cinnamon.dconf ]; then
-    dconf load /org/cinnamon/ < ./configs/cinnamon.dconf  
+    sed "s|MINTDOWS_HOME|$REPO_DIR|g" ./configs/cinnamon.dconf > ./configs/cinnamon_runtime.dconf
+    dconf load /org/cinnamon/ < ./configs/cinnamon_runtime.dconf
+    rm ./configs/cinnamon_runtime.dconf
+fi
+
+MENU_DEST_DIR="$HOME/.config/cinnamon/spices/menu@cinnamon.org"
+if [ -f ./configs/menu.json ]; then
+    echo "Inyectando configuración del menú..."
+    mkdir -p "$MENU_DEST_DIR"
+    
+    sed "s|MINTDOWS_HOME|$REPO_DIR|g" ./configs/menu.json > "$MENU_DEST_DIR/0.json"
 fi
 
 chmod +x ./install.sh
 if [ -f "./update.sh" ]; then
     chmod +x ./update.sh
 fi
-
 
 DESKTOP_DIR=$(xdg-user-dir DESKTOP)
 
@@ -73,7 +82,7 @@ Type=Application
 Terminal=true
 Name=Actualizar Sistema
 Comment=Mantiene tus programas y la PC al día.
-Exec=bash $REPO_DIR/update.sh
+Exec=bash "$REPO_DIR/update.sh"
 Icon=update
 Categories=System;Settings;
 EOF
@@ -81,8 +90,10 @@ EOF
 chmod +x "$DESKTOP_DIR/Actualizar-Sistema.desktop"
 
 echo "==========================================="
-echo "    ¡Mintdows se instaló correctamente     "
-echo "   Presiona Enter para cerrar esta ventana."
+echo "    ¡Mintdows se instaló correctamente!    "
+echo "==========================================="
+echo " Presiona Enter para cerrar esta ventana..."
 echo "==========================================="
 read -p ""
 kill -9 $PPID
+

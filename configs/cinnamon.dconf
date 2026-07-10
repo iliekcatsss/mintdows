@@ -14,7 +14,7 @@ panels-height=['1:38']
 show-media-keys-osd=true
 
 [desktop/background]
-picture-uri='file:///home/dev/Descargas/Windows.jpeg'
+picture-uri='file://MINTDOWS_HOME/assets/Background.jpeg'
 
 [desktop/background/slideshow]
 delay=15
@@ -88,3 +88,4 @@ night-light-last-coordinates=(29.066666999999999, -110.966667)
 
 [theme]
 name='Windows-10'
+
