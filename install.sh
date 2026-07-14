@@ -1,16 +1,23 @@
 #!/bin/bash
 
-REPO_DIR="$( cd "$( dirname "${BASH_SOURCE}" )" &> /dev/null && pwd )"
+REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "$REPO_DIR"
 
-# leer version local (si no existe asume v0.0.0)
-VERSION_LOCAL="0.0.0"
-if [ -f "VERSION" ]; then
-    VERSION_LOCAL=$(cat VERSION | tr -d '\r' | xargs)
+git fetch --tags &> /dev/null
+
+VERSION_LOCAL=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+
+RAMA_ACTUAL=$(git branch --show-current)
+if [ -z "$RAMA_ACTUAL" ]; then RAMA_ACTUAL="stable"; fi
+
+if [ "$RAMA_ACTUAL" = "main" ]; then
+    VERSION_LOCAL="${VERSION_LOCAL}-unstable"
+    echo "[!] ADVERTENCIA: Estás usando una versión INESTABLE de desarrollo ($VERSION_LOCAL)."
+    echo "Sujeta a fallos. Usa bajo tu propio riesgo."
 fi
 
 echo "==========================================="
-echo "            Mintdows v$VERSION_LOCAL"
+echo "            Mintdows $VERSION_LOCAL"
 echo "             Por ILikeCats                 "
 echo "==========================================="
 
@@ -38,7 +45,6 @@ sudo apt autoremove -y
 
 flatpak install flathub \
     org.localsend.localsend_app \
-    org.onlyoffice.desktopeditors \
     com.github.jeromerobert.pdfarranger \
     org.videolan.VLC \
     com.tomjwatson.Emote \
@@ -92,6 +98,11 @@ chmod +x "$DESKTOP_DIR/Actualizar-Sistema.desktop"
 echo "==========================================="
 echo "    ¡Mintdows se instaló correctamente!    "
 echo "==========================================="
+echo ""
+echo "           [i] NOTA IMPORTANTE:"
+echo "   REINICIA LA PC para aplicar por completo"
+echo "         los cambios al sistema."
+echo ""
 echo " Presiona Enter para cerrar esta ventana..."
 echo "==========================================="
 read -p ""

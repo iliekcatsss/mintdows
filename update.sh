@@ -8,44 +8,75 @@ echo "==========================================="
 echo "      Comprobando actualizaciones...       "
 echo "==========================================="
 
-# leer version local (si no existe asume v0.0.0)
-VERSION_LOCAL="0.0.0"
-if [ -f "VERSION" ]; then
-    VERSION_LOCAL=$(cat VERSION | tr -d '\r' | xargs)
+# detectar rama
+RAMA_ACTUAL=$(git branch --show-current)
+if [ -z "$RAMA_ACTUAL" ]; then RAMA_ACTUAL="stable"; fi
+
+# obtener version local
+VERSION_LOCAL=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+
+# traer ultimos cambios y tags
+echo "[i] Sincronizando datos con GitHub..."
+git fetch --tags origin &> /dev/null
+CONEXION_GIT=$?
+
+# mostrar estado actual de la rama
+if [ "$RAMA_ACTUAL" = "main" ]; then
+    echo "[i] Rama actual: $RAMA_ACTUAL (Desarrollo)"
+    VERSION_LOCAL_TXT="${VERSION_LOCAL}-unstable"
+else
+    echo "[i] Rama actual: $RAMA_ACTUAL (Estable)"
+    VERSION_LOCAL_TXT="$VERSION_LOCAL"
 fi
+echo "[i] Versión instalada: $VERSION_LOCAL_TXT"
 
-# descargar version remota
-URL_VERSION="https://raw.githubusercontent.com/iliekcatsss/mintdows/refs/heads/main/VERSION"
-VERSION_REMOTA=$(curl -sL --connect-timeout 5 "$URL_VERSION" | tr -d '\r' | xargs)
-
-# mostrar estado de versiones
-echo "[i] Versión instalada: v$VERSION_LOCAL"
-
-if [ -z "$VERSION_REMOTA" ] || [[ "$VERSION_REMOTA" == *"404"* ]]; then
-    echo "[!] No se pudo conectar a GitHub."
+# validar si hubo conexion con git
+if [ $CONEXION_GIT -ne 0 ]; then
+    echo "[!] No se pudo conectar con el servidor de GitHub."
     echo "[!] Se saltará la actualización del repositorio."
     echo ""
 else
-    echo "[i] Versión disponible: v$VERSION_REMOTA"
-    echo ""
+    VERSION_REMOTA=$(git tag -l | sort -V | tail -n1)
     
-    # comprobar version
-    if [ "$VERSION_LOCAL" = "$VERSION_REMOTA" ] || [ "$(printf '%s\n%s' "$VERSION_REMOTA" "$VERSION_LOCAL" | sort -V | head -n1)" = "$VERSION_REMOTA" ]; then
+    if [ -z "$VERSION_REMOTA" ]; then
+        VERSION_REMOTA="v0.0.0"
+    fi
+
+    if [ "$RAMA_ACTUAL" = "main" ]; then
+        VERSION_REMOTA_TXT="${VERSION_REMOTA}-unstable"
+    else
+        VERSION_REMOTA_TXT="$VERSION_REMOTA"
+    fi
+
+    echo "[i] Versión disponible en GitHub: $VERSION_REMOTA_TXT"
+    echo ""
+
+    CAMBIOS_PENDIENTES=$(git rev-list HEAD..origin/"$RAMA_ACTUAL" --count 2>/dev/null)
+
+    if [ "$CAMBIOS_PENDIENTES" = "0" ] || [ -z "$CAMBIOS_PENDIENTES" ]; then
         echo "[✔] Mintdows ya está en su última versión."
     else
         echo "[i] ¡Hay una nueva actualización disponible de Mintdows!"
-        read -p "¿Deseas actualizar Mintdows a versión v$VERSION_REMOTA? (s/n): " RESPUESTA
+        read -p "¿Deseas actualizar Mintdows a la versión $VERSION_REMOTA_TXT? (s/n): " RESPUESTA
         echo ""
 
         if [[ "$RESPUESTA" =~ ^[Ss]$ ]]; then
             echo "==========================================="
             echo "     Sincronizando Mintdows con GitHub...  "
             echo "==========================================="
-            if git pull origin main; then
+            
+            git stash &> /dev/null
+            
+            if git pull origin "$RAMA_ACTUAL"; then
                 echo "[✔] Repositorio actualizado con éxito."
+                chmod +x ./install.sh ./update.sh &> /dev/null
+                
+                VERSION_LOCAL=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
             else
                 echo "[!] Error al sincronizar. Se usarán los archivos locales actuales."
             fi
+            
+            git stash pop &> /dev/null
         else
             echo "[i] Actualización de Mintdows omitida por el usuario."
         fi
