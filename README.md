@@ -1,3 +1,6 @@
+> [!WARNING]
+> **RAMA DE DESARROLLO (main):** Este código contiene características experimentales en fase de pruebas. Si buscas una instalación segura y estable para tu uso diario, dirígete a la rama [stable](https://github.com/iliekcatsss/mintdows/tree/stable).
+
 [![Badge Commits]][Commit Rate]
 [![Badge License]][License]
 
@@ -20,7 +23,7 @@ Mintdows es un script de automatización y personalización para transformar **L
 1. Instala Linux Mint (Cinnamon), puedes hacerlo desde [aquí](https://linuxmint.com/download.php)
 2. Abre la terminal y clona el repo
 ```bash
-git clone https://github.com/iliekcatsss/mintdows.git
+git clone -b main https://github.com mintdows-dev
 ```
 3. Ejecuta el archivo de instalación
 ```bash
