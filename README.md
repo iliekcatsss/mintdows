@@ -31,6 +31,8 @@ cd mintdows && chmod +x install.sh update.sh && ./install.sh
 ```
 4. ¡Listo! Disfruta tu experiencia con Mintdows
 
+Si deseas colaborar o probar funciones experimentales, visita nuestra rama de desarrollo [main](https://github.com/iliekcatsss/mintdows/tree/main)
+
 ## Contacto
 
 Proyecto desarrollado por **ILikeCats (iliekcatsss)**. Si tienes dudas, sugerencias o quieres reportar un bug, puedes encontrarme en:
