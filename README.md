@@ -48,7 +48,7 @@ Este proyecto organiza y automatiza herramientas de terceros respetando sus lice
 
 <!-------------------------------------------------->
 [License]: LICENSE
-[Commit Rate]: https://github.com/iliekcatsss/mintdows/commits/main/
+[Commit Rate]: https://github.com/iliekcatsss/mintdows/commits/stable/
 
 <!--------------------[ Badges ]-------------------->
 [Badge License]: https://img.shields.io/github/license/iliekcatsss/mintdows
