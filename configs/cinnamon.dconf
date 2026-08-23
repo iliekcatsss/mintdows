@@ -3,6 +3,9 @@ alttab-switcher-delay=100
 desklet-snap-interval=25
 enabled-applets=['panel1:left:0:menu@cinnamon.org:0', 'panel1:left:2:grouped-window-list@cinnamon.org:2', 'panel1:right:6:systray@cinnamon.org:3', 'panel1:right:7:xapp-status@cinnamon.org:4', 'panel1:right:8:notifications@cinnamon.org:5', 'panel1:right:9:printers@cinnamon.org:6', 'panel1:right:10:removable-drives@cinnamon.org:7', 'panel1:right:11:keyboard@cinnamon.org:8', 'panel1:right:12:favorites@cinnamon.org:9', 'panel1:right:13:network@cinnamon.org:10', 'panel1:right:14:sound@cinnamon.org:11', 'panel1:right:15:power@cinnamon.org:12', 'panel1:right:16:calendar@cinnamon.org:13', 'panel1:right:17:cornerbar@cinnamon.org:14', 'panel1:right:1:weather@mockturtl:19']
 enabled-desklets=@as []
+menu-icon='/home/dev/mintdows/assets/Windows_icon_logo.png'
+menu-icon-custom=true
+menu-label='Inicio'
 next-applet-id=21
 next-desklet-id=2
 panel-edit-mode=false
@@ -10,11 +13,12 @@ panel-zone-icon-sizes='[{"panelId": 1, "left": 0, "center": 0, "right": 24}]'
 panel-zone-symbolic-icon-sizes='[{"panelId": 1, "left": 28, "center": 28, "right": 16}]'
 panel-zone-text-sizes='[{"panelId": 1, "left": 6.0, "center": 0.0, "right": 0.0}]'
 panels-enabled=['1:0:bottom']
-panels-height=['1:38']
+panels-height=['1:40']
 show-media-keys-osd=true
 
 [desktop/background]
-picture-uri='file://MINTDOWS_HOME/assets/Background.jpeg'
+picture-options='zoom'
+picture-uri='file:///home/dev/mintdows/assets/Background.jpeg'
 
 [desktop/background/slideshow]
 delay=15
@@ -26,6 +30,7 @@ sources=[('xkb', 'latam')]
 [desktop/interface]
 cursor-blink=false
 cursor-blink-time=1200
+cursor-size=24
 cursor-theme='DMZ-White'
 gtk-theme='Windows-10'
 icon-theme='We10X-dark'
@@ -38,6 +43,9 @@ binding=['<Super>v']
 command='/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=copyq com.github.hluk.copyq --start-server show'
 name='CopyQ'
 
+[desktop/keybindings/wm]
+switch-to-workspace-down=['<Super>Tab']
+
 [desktop/notifications]
 bottom-notifications=true
 fullscreen-notifications=false
@@ -48,6 +56,14 @@ remove-old=false
 delay=uint32 500
 numlock-state=true
 repeat-interval=uint32 30
+
+[desktop/peripherals/mouse]
+double-click=400
+drag-threshold=8
+speed=0.0
+
+[desktop/peripherals/touchpad]
+speed=0.0
 
 [desktop/screensaver]
 layout-group=0
@@ -84,8 +100,8 @@ draggable-border-width=10
 orientation-lock=true
 
 [settings-daemon/plugins/color]
+night-light-enabled=false
 night-light-last-coordinates=(29.066666999999999, -110.966667)
 
 [theme]
 name='Windows-10'
-
