@@ -1,4 +1,4 @@
-# Changelog
+# Changelog (WIP)
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
 

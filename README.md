@@ -23,7 +23,7 @@ Mintdows es un script de automatización y personalización para transformar **L
 1. Instala Linux Mint (Cinnamon), puedes hacerlo desde [aquí](https://linuxmint.com/download.php)
 2. Abre la terminal y clona el repo
 ```bash
-git clone -b main https://github.com mintdows-dev
+git clone -b main https://github.com/iliekcatsss/mintdows.git
 ```
 3. Ejecuta el archivo de instalación
 ```bash
@@ -48,7 +48,7 @@ Este proyecto organiza y automatiza herramientas de terceros respetando sus lice
 
 <!-------------------------------------------------->
 [License]: LICENSE
-[Commit Rate]: https://github.com/iliekcatsss/mintdows/commits/stable/
+[Commit Rate]: https://github.com/iliekcatsss/mintdows/commits/main/
 
 <!--------------------[ Badges ]-------------------->
 [Badge License]: https://img.shields.io/github/license/iliekcatsss/mintdows

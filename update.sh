@@ -65,8 +65,10 @@ else
             echo "     Sincronizando Mintdows con GitHub...  "
             echo "==========================================="
             
-            git stash &> /dev/null
-            
+            STASH_MARCA="mintdows-auto-update-$(date +%s)"
+            git stash push -u -m "$STASH_MARCA" &> /dev/null
+            STASH_CREADO=$?
+
             if git pull origin "$RAMA_ACTUAL"; then
                 echo "[✔] Repositorio actualizado con éxito."
                 chmod +x ./install.sh ./update.sh &> /dev/null
@@ -76,7 +78,10 @@ else
                 echo "[!] Error al sincronizar. Se usarán los archivos locales actuales."
             fi
             
-            git stash pop &> /dev/null
+            if [ $STASH_CREADO -eq 0 ] && git stash list | grep -q "$STASH_MARCA"; then
+                STASH_REF=$(git stash list | grep "$STASH_MARCA" | head -n1 | cut -d: -f1)
+                git stash pop "$STASH_REF" &> /dev/null
+            fi
         else
             echo "[i] Actualización de Mintdows omitida por el usuario."
         fi
@@ -107,4 +112,3 @@ echo "      ¡Todo listo! Tu PC está al día.      "
 echo "  Presiona Enter para cerrar esta ventana. "
 echo "==========================================="
 read
-

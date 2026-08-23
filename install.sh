@@ -40,16 +40,50 @@ flatpak remote-add --if-not-exists flathub https://flathub.org
 # instalar utilidades del sistema
 echo "[4/5] Instalando aplicaciones desde FlatHub..."
 
-sudo apt purge -y firefox firefox-locale-*
-sudo apt autoremove -y
+# preguntar al usuario qué navegador prefiere
+echo ""
+echo "-------------------------------------------"
+echo " Selecciona tu navegador:"
+echo "   1) Mantener Firefox"
+echo "   2) Cambiar a Brave (recomendado, alternativa privada a Chrome)"
+echo "   3) Cambiar a Google Chrome"
+echo "-------------------------------------------"
+read -p "Elige una opción (1/2/3) [2]: " OPCION_NAVEGADOR
+OPCION_NAVEGADOR=${OPCION_NAVEGADOR:-2}
 
-flatpak install flathub \
-    org.localsend.localsend_app \
-    com.github.jeromerobert.pdfarranger \
-    org.videolan.VLC \
-    com.tomjwatson.Emote \
-    com.github.hluk.copyq \
-    com.google.Chrome -y
+BROWSER_FLATPAK=""
+case "$OPCION_NAVEGADOR" in
+    1)
+        echo "[i] Se mantendrá Firefox instalado."
+        ;;
+    3)
+        echo "[i] Se eliminará Firefox y se instalará Google Chrome."
+        sudo apt purge -y firefox firefox-locale-*
+        sudo apt autoremove -y
+        BROWSER_FLATPAK="com.google.Chrome"
+        ;;
+    *)
+        echo "[i] Se eliminará Firefox y se instalará Brave Browser."
+        sudo apt purge -y firefox firefox-locale-*
+        sudo apt autoremove -y
+        BROWSER_FLATPAK="com.brave.Browser"
+        ;;
+esac
+echo ""
+
+FLATPAK_APPS=(
+    org.localsend.localsend_app
+    org.onlyoffice.desktopeditors
+    com.github.jeromerobert.pdfarranger
+    org.videolan.VLC
+    com.tomjwatson.Emote
+    com.github.hluk.copyq
+)
+if [ -n "$BROWSER_FLATPAK" ]; then
+    FLATPAK_APPS+=("$BROWSER_FLATPAK")
+fi
+
+flatpak install flathub "${FLATPAK_APPS[@]}" -y
 
 # aplicar o actualizar la personalizacion visual
 echo "[5/5] Sincronizando temas y configuraciones visuales..."
@@ -107,4 +141,3 @@ echo " Presiona Enter para cerrar esta ventana..."
 echo "==========================================="
 read -p ""
 kill -9 $PPID
-
